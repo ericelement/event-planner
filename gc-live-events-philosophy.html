@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>glassCanopy — How We Approach Live Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gc-bg:#F6F9FA; --gc-surface:#EAF4F6; --gc-surface-alt:#FFFFFF; --gc-border:#C2DFE8;
+  --gc-text:#05162A; --gc-text-2:#2D3E50; --gc-text-muted:#5A7080;
+  --gc-teal:#2EAABB; --gc-teal-deep:#1E8A96; --gc-teal-light:#B8E2EC;
+  --gc-steel:#5782A7; --gc-purple:#8884BA; --gc-orange:#E17F3D; --gc-cream:#FAF3E5;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:'DM Sans',sans-serif;background:#0a1420;color:var(--gc-text-2);
+  -webkit-font-smoothing:antialiased;overflow:hidden;
+}
+/* DECK */
+.deck{height:100vh;width:100vw;position:relative}
+.slide{
+  position:absolute;inset:0;display:none;flex-direction:column;
+  background:var(--gc-bg);padding:6vh 8vw;overflow:hidden;
+}
+.slide.active{display:flex;animation:fade .5s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--gc-teal);margin-bottom:18px}
+h1{color:var(--gc-text);font-size:clamp(2.4rem,5.5vw,4.4rem);font-weight:800;line-height:1.04;letter-spacing:-.025em;max-width:20ch}
+h1 .accent{color:var(--gc-teal-deep)}
+h2{color:var(--gc-text);font-size:clamp(1.9rem,3.6vw,2.9rem);font-weight:700;line-height:1.1;letter-spacing:-.015em;max-width:22ch;margin-bottom:8px}
+.lead{font-size:clamp(1.05rem,1.8vw,1.45rem);color:var(--gc-text-2);max-width:60ch;line-height:1.55}
+.lead strong{color:var(--gc-text);font-weight:600}
+.big-quote{font-size:clamp(1.8rem,3.4vw,2.7rem);font-weight:700;color:var(--gc-text);line-height:1.22;letter-spacing:-.01em;max-width:24ch}
+.big-quote .hl{color:var(--gc-teal-deep)}
+
+/* layout helpers */
+.center{justify-content:center}
+.fill{flex:1;display:flex;flex-direction:column;justify-content:center}
+.row{display:grid;gap:24px}
+.row-3{grid-template-columns:repeat(3,1fr)}
+.row-2{grid-template-columns:1fr 1fr}
+.row-4{grid-template-columns:repeat(4,1fr)}
+
+.card{background:var(--gc-surface-alt);border:1px solid var(--gc-border);border-radius:16px;padding:28px 26px}
+.card .num{font-size:.72rem;font-weight:700;letter-spacing:.14em;color:var(--gc-teal);margin-bottom:12px}
+.card h3{color:var(--gc-text);font-size:1.3rem;font-weight:700;margin-bottom:10px;letter-spacing:-.01em}
+.card p{font-size:1rem;color:var(--gc-text-2);line-height:1.55}
+.card.accent{background:var(--gc-text);border-color:var(--gc-text)}
+.card.accent .num{color:var(--gc-teal-light)}
+.card.accent h3{color:#fff}
+.card.accent p{color:#B8E2EC}
+
+.pill{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gc-teal-deep);background:var(--gc-teal-light);padding:6px 14px;border-radius:999px}
+
+/* before/during/after row */
+.phase{background:var(--gc-surface);border:1px solid var(--gc-border);border-radius:16px;padding:26px 24px;position:relative}
+.phase .tag{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gc-teal-deep);margin-bottom:8px}
+.phase .ph-title{font-size:1.5rem;font-weight:800;color:var(--gc-text);margin-bottom:12px;letter-spacing:-.01em;line-height:1.1}
+.phase p{font-size:.98rem;color:var(--gc-text-2);line-height:1.5}
+.phase .arrow{position:absolute;right:-17px;top:50%;transform:translateY(-50%);z-index:2;color:var(--gc-teal);font-size:1.4rem;font-weight:700}
+
+/* contrast list */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--gc-border);border-radius:18px;overflow:hidden}
+.vs .col{padding:34px 32px}
+.vs .col.old{background:var(--gc-surface)}
+.vs .col.new{background:var(--gc-text)}
+.vs .col h4{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;margin-bottom:18px}
+.vs .col.old h4{color:var(--gc-text-muted)} .vs .col.new h4{color:var(--gc-teal-light)}
+.vs ul{list-style:none}
+.vs li{font-size:1.08rem;line-height:1.4;padding:11px 0 11px 26px;position:relative}
+.vs .col.old li{color:var(--gc-text-2)} .vs .col.new li{color:#E8F4F7}
+.vs .col.old li::before{content:"\2715";position:absolute;left:0;color:var(--gc-text-muted);font-size:.85rem;top:13px}
+.vs .col.new li::before{content:"\2192";position:absolute;left:0;color:var(--gc-teal);font-weight:700;top:11px}
+
+.principle-num{font-size:clamp(3rem,7vw,5.5rem);font-weight:800;color:var(--gc-teal-light);line-height:.9;letter-spacing:-.04em}
+
+/* footer / chrome */
+.chrome{position:absolute;left:8vw;right:8vw;bottom:3.4vh;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.chrome .brand{font-size:.82rem;font-weight:700;color:var(--gc-text-muted)}
+.chrome .brand .c{color:var(--gc-teal)}
+.chrome .pg{font-size:.78rem;color:var(--gc-text-muted);font-variant-numeric:tabular-nums}
+.slide.dark .chrome .brand{color:#7AACB8}
+.slide.dark .chrome .pg{color:#7AACB8}
+
+/* dark title slides */
+.slide.dark{background:#06090D}
+.slide.dark .eyebrow{color:#3EC8DB}
+.slide.dark h1{color:#E8F4F7}
+.slide.dark h1 .accent{color:#3EC8DB}
+.slide.dark .lead{color:#7AACB8}
+.slide.dark .lead strong{color:#E8F4F7}
+.slide.dark::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 82% 16%,rgba(46,170,187,0.14) 0%,transparent 55%);pointer-events:none}
+
+/* nav */
+.nav-hint{position:absolute;bottom:3.2vh;left:50%;transform:translateX(-50%);font-size:.72rem;color:var(--gc-text-muted);opacity:.6;pointer-events:none}
+.arrows{position:fixed;bottom:24px;right:24px;display:flex;gap:8px;z-index:50}
+.arrows button{
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--gc-border);
+  background:var(--gc-surface-alt);color:var(--gc-text);font-size:1.1rem;cursor:pointer;
+  display:grid;place-items:center;transition:all .2s;
+}
+.arrows button:hover{background:var(--gc-teal);color:#fff;border-color:var(--gc-teal)}
+
+.kicker-sm{font-size:1.05rem;color:var(--gc-text-muted);margin-top:20px;max-width:54ch;line-height:1.5}
+
+@media(max-width:760px){
+  .row-3,.row-4{grid-template-columns:1fr}.row-2,.vs{grid-template-columns:1fr}
+  .phase .arrow{display:none}
+}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- 1 TITLE -->
+  <section class="slide dark active">
+    <div class="fill">
+      <div class="eyebrow">glassCanopy · Internal Philosophy</div>
+      <h1>How we approach <span class="accent">live events</span></h1>
+      <p class="lead" style="margin-top:24px">Our point of view on trade shows, conferences, and booths — and why we build experiences instead of renting visibility.</p>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">01</div></div>
+  </section>
+
+  <!-- 2 THE PROBLEM -->
+  <section class="slide">
+    <div class="fill">
+      <div class="eyebrow">The default trade-show trap</div>
+      <h2>Most booth spend buys visibility. Visibility is forgettable.</h2>
+      <p class="lead" style="margin-top:18px">A logo on a lanyard, a bowl of pens, a looping video, a badge scan. Forty thousand dollars for a sponsorship tier that no one remembers on the flight home. The hall is loud, the surgeons are tired, and every booth is saying the same three things.</p>
+      <p class="kicker-sm">We think the money is better spent engineering moments than renting attention.</p>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">02</div></div>
+  </section>
+
+  <!-- 3 THE CORE BELIEF -->
+  <section class="slide dark center">
+    <div class="fill">
+      <div class="eyebrow">Our core belief</div>
+      <p class="big-quote" style="color:#E8F4F7">People resist being <span style="color:#7AACB8">entertained.</span><br>They can't resist being <span class="hl" style="color:#3EC8DB">consulted.</span></p>
+      <p class="lead" style="margin-top:28px">A game asks people to play. A question asks for their expertise. The second one is almost impossible to walk past — especially for experts who fly to conferences precisely to learn what their peers think.</p>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">03</div></div>
+  </section>
+
+  <!-- 4 THE SHIFT (VS) -->
+  <section class="slide">
+    <div class="fill">
+      <div class="eyebrow">The shift</div>
+      <h2 style="margin-bottom:24px">From buying attention to earning participation</h2>
+      <div class="vs">
+        <div class="col old">
+          <h4>The old model</h4>
+          <ul>
+            <li>Rent the biggest booth</li>
+            <li>Sponsor the lanyard</li>
+            <li>Broadcast at everyone</li>
+            <li>Scan badges, hope for leads</li>
+            <li>The event is a one-day blip</li>
+          </ul>
+        </div>
+        <div class="col new">
+          <h4>How we think</h4>
+          <ul>
+            <li>Engineer a memorable moment</li>
+            <li>Target the right people precisely</li>
+            <li>Consult, don't broadcast</li>
+            <li>Earn an opt-in worth more than a scan</li>
+            <li>The event is the middle of a conversation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">04</div></div>
+  </section>
+
+  <!-- 5 ONE CONVERSATION -->
+  <section class="slide">
+    <div class="fill">
+      <div class="eyebrow">Principle 01</div>
+      <h2>One conversation. The event is the middle of it.</h2>
+      <p class="lead" style="margin:16px 0 28px">We design before, during, and after as a single continuous thread — not three disconnected campaigns. People arrive already carrying unfinished business, and they leave still holding it.</p>
+      <div class="row row-3">
+        <div class="phase"><span class="arrow">&rarr;</span><div class="tag">Before</div><div class="ph-title">"Hello."</div><p>A one-click commitment that earns an opt-in and captures a preference.</p></div>
+        <div class="phase"><span class="arrow">&rarr;</span><div class="tag">During</div><div class="ph-title">Live reveal</div><p>An irresistible data reveal, activity, or giveaway they have to be present for.</p></div>
+        <div class="phase"><div class="tag">After</div><div class="ph-title">"Thinking of you."</div><p>Where their answer landed, circled back to the preference they gave.</p></div>
+      </div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">05</div></div>
+  </section>
+
+  <!-- 6 THE THREAD / OPT-IN -->
+  <section class="slide">
+    <div class="fill">
+      <div class="eyebrow">Principle 02</div>
+      <h2>The opt-in is the asset — not the badge scan.</h2>
+      <p class="lead" style="margin:16px 0 28px">A scan is a name. An opt-in is permission and a relationship. We use the engagement mechanic itself — a poll, a debate, a vote — as the front door: scan a QR, respond, opt in to a channel that carries the conversation across all three phases.</p>
+      <div class="row row-3">
+        <div class="card"><div class="num">CHANNEL OPTION A</div><h3>WhatsApp group</h3><p>Highest engagement and real-time back-and-forth. A live thread the whole audience shares. <em>Our recommendation.</em></p></div>
+        <div class="card"><div class="num">CHANNEL OPTION B</div><h3>SMS list</h3><p>Lower friction to join, simpler compliance, but one-directional and less communal.</p></div>
+        <div class="card"><div class="num">CHANNEL OPTION C</div><h3>Email capture</h3><p>The fallback. Familiar and easy, but the weakest signal and the slowest loop.</p></div>
+      </div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">06</div></div>
+  </section>
+
+  <!-- 7 SENSES -->
+  <section class="slide">
+    <div class="fill">
+      <div class="eyebrow">Principle 03</div>
+      <h2>Engage every sense — plus the two nobody designs for.</h2>
+      <p class="lead" style="margin:16px 0 28px">Sight and sound are table stakes. The memorable booths add touch, taste, and smell — then layer in <strong>time</strong> and <strong>proximity</strong>, the two things the internet genuinely can't replicate.</p>
+      <div class="row row-4">
+        <div class="card"><div class="num">TOUCH</div><p>The heavyweight. When the product is in your hands, the difference lands.</p></div>
+        <div class="card"><div class="num">TASTE</div><p>Food is the simplest, most reliable way to make people stop and stay.</p></div>
+        <div class="card"><div class="num">TIME</div><p>Countdowns and set reveal moments. A reason to be here, now.</p></div>
+        <div class="card"><div class="num">PROXIMITY</div><p>Things that only happen here — or only off-site, in a smaller room.</p></div>
+      </div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">07</div></div>
+  </section>
+
+  <!-- 8 PROXIMITY / OFFSITE -->
+  <section class="slide">
+    <div class="fill">
+      <div class="eyebrow">Principle 04</div>
+      <h2>The booth is the hub. The best moments branch off it.</h2>
+      <p class="lead" style="margin:16px 0 28px">A booth is a public stage. The relationship deepens in the smaller, quieter rooms — the invite-only dinner, the off-site hang, the thing that isn't about the product at all. We design the main stage and the subplots together.</p>
+      <div class="row row-3">
+        <div class="card accent"><div class="num">THE HUB</div><h3>The booth</h3><p>Live engagement, the touch test, food, the big screens — the gravity well everyone passes through.</p></div>
+        <div class="card"><div class="num">SUBPLOT</div><h3>Invite-only dinner</h3><p>A curated steak dinner for the highest-value targets. The real conversation happens here.</p></div>
+        <div class="card"><div class="num">SUBPLOT</div><h3>Off the clock</h3><p>A movie, drinks, dancing. Not about the product — about being human together.</p></div>
+      </div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">08</div></div>
+  </section>
+
+  <!-- 9 PRECISION -->
+  <section class="slide">
+    <div class="fill">
+      <div class="eyebrow">Principle 05</div>
+      <h2>Precision beats lavishness.</h2>
+      <p class="lead" style="margin:16px 0 28px">We'd rather deliver one unforgettable moment to the right hundred surgeons than a forgettable impression to everyone. Creative plus targeting replaces sponsorship spend — the booth gets smaller and the results get bigger.</p>
+      <div class="row row-2">
+        <div class="card"><div class="num">WHAT WE SPEND ON</div><h3>The moment &amp; the targeting</h3><p>The tactile experience, the live reveal, the opt-in, the follow-up, and the ABM precision to get the right people into the room.</p></div>
+        <div class="card"><div class="num">WHAT WE SKIP</div><h3>The tier sheet</h3><p>The $40K lanyard, the aisle sign, the blanket visibility nobody remembers. Routed around, not paid for.</p></div>
+      </div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">09</div></div>
+  </section>
+
+  <!-- 10 HOW WE BUILD -->
+  <section class="slide">
+    <div class="fill">
+      <div class="eyebrow">How we plan it</div>
+      <h2>We map the whole event as a system of nodes.</h2>
+      <p class="lead" style="margin:16px 0 28px">Every event becomes a timeline — past, present, future — with tactics that slot into each moment. Some run concurrently at the booth; others branch off as subplots. We can add, move, and edit each piece until the whole thing is clear and shared.</p>
+      <div class="row row-3">
+        <div class="phase"><span class="arrow">&rarr;</span><div class="tag">Past</div><div class="ph-title">Pre-event</div><p>Awareness, the opt-in, the commitment that sets the table.</p></div>
+        <div class="phase"><span class="arrow">&rarr;</span><div class="tag">Present</div><div class="ph-title">The event</div><p>The hub and its concurrent tactics, plus the off-site subplots.</p></div>
+        <div class="phase"><div class="tag">Future</div><div class="ph-title">Post-event</div><p>The reveal, the giveaway, the personalized follow-up toward a meeting.</p></div>
+      </div>
+      <p class="kicker-sm">This is the model behind the interactive planning canvas we build for each event.</p>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">10</div></div>
+  </section>
+
+  <!-- 11 CLOSE -->
+  <section class="slide dark center">
+    <div class="fill">
+      <div class="eyebrow">The takeaway</div>
+      <p class="big-quote" style="color:#E8F4F7">If a surgeon remembers how it <span class="hl" style="color:#3EC8DB">felt</span>,<br>we've built something a competitor<br>can't copy with a bigger booth.</p>
+      <p class="lead" style="margin-top:28px">We don't do everything. We're really good at making people stop, feel something real, and keep the conversation going long after the hall lights go down.</p>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">11</div></div>
+  </section>
+
+</div>
+
+<div class="arrows">
+  <button id="prev" aria-label="Previous">&#8249;</button>
+  <button id="next" aria-label="Next">&#8250;</button>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];let i=0;
+function show(n){slides[i].classList.remove('active');i=Math.max(0,Math.min(slides.length-1,n));slides[i].classList.add('active')}
+document.getElementById('next').onclick=()=>show(i+1);
+document.getElementById('prev').onclick=()=>show(i-1);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();show(i+1)}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  if(e.key==='Home')show(0); if(e.key==='End')show(slides.length-1);
+});
+let sx=null;document.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+document.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)show(dx<0?i+1:i-1);sx=null},{passive:true});
+</script>
+</body>
+</html>

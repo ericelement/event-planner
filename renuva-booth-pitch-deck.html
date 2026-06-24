@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The MTF Biologics Booth — glassCanopy × Renuva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gc-bg:#F6F9FA; --gc-surface:#EAF4F6; --gc-surface-alt:#FFFFFF; --gc-border:#C2DFE8;
+  --gc-text:#05162A; --gc-text-2:#2D3E50; --gc-text-muted:#5A7080;
+  --gc-teal:#2EAABB; --gc-teal-bright:#3EC8DB; --gc-teal-deep:#1E8A96; --gc-teal-light:#B8E2EC;
+  --gc-steel:#5782A7; --gc-purple:#8884BA; --gc-orange:#E17F3D; --gc-cream:#FAF3E5;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'DM Sans',sans-serif;background:#06090D;color:var(--gc-text-2);
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+
+.deck{height:100vh;width:100vw;position:relative}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;
+  background:var(--gc-bg);padding:5.5vh 7vw;overflow:hidden}
+.slide.active{display:flex;animation:fade .5s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--gc-teal);margin-bottom:16px}
+h1{color:var(--gc-text);font-size:clamp(2.3rem,5.2vw,4.2rem);font-weight:800;line-height:1.04;letter-spacing:-.025em;max-width:18ch}
+h1 .accent{color:var(--gc-teal-deep)}
+h2{color:var(--gc-text);font-size:clamp(1.7rem,3.3vw,2.7rem);font-weight:700;line-height:1.1;letter-spacing:-.015em;max-width:20ch;margin-bottom:8px}
+h2 .accent{color:var(--gc-teal-deep)}
+.lead{font-size:clamp(1rem,1.65vw,1.32rem);color:var(--gc-text-2);max-width:54ch;line-height:1.55}
+.lead strong{color:var(--gc-text);font-weight:600}
+.big-quote{font-size:clamp(1.7rem,3.2vw,2.6rem);font-weight:700;color:var(--gc-text);line-height:1.2;letter-spacing:-.01em;max-width:23ch}
+.big-quote .hl{color:var(--gc-teal-deep)}
+
+.fill{flex:1;display:flex;flex-direction:column;justify-content:center}
+.pill{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gc-teal-deep);background:var(--gc-teal-light);padding:6px 14px;border-radius:999px;margin-bottom:14px;align-self:flex-start}
+
+/* SPLIT layout: image + copy */
+.split{flex:1;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4vw,64px);align-items:center}
+.split.flip{grid-template-columns:.95fr 1.05fr}
+.split.flip .copy{order:2}.split.flip .media{order:1}
+.copy{display:flex;flex-direction:column;justify-content:center}
+.media{position:relative;height:74vh;max-height:640px;border-radius:20px;overflow:hidden;
+  box-shadow:0 26px 70px rgba(5,22,42,0.22);border:1px solid var(--gc-border);background:var(--gc-surface)}
+.media img{width:100%;height:100%;object-fit:cover;display:block}
+.media .cap{position:absolute;left:16px;bottom:14px;font-size:.7rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;color:#fff;background:rgba(5,22,42,.55);backdrop-filter:blur(6px);padding:6px 13px;border-radius:999px}
+
+.feat-list{list-style:none;margin-top:22px}
+.feat-list li{position:relative;padding:10px 0 10px 30px;font-size:1.02rem;line-height:1.45;color:var(--gc-text-2);border-bottom:1px solid var(--gc-border)}
+.feat-list li:last-child{border-bottom:none}
+.feat-list li::before{content:"";position:absolute;left:4px;top:17px;width:9px;height:9px;border-radius:50%;background:var(--gc-teal)}
+.feat-list li strong{color:var(--gc-text);font-weight:700}
+.kicker-sm{font-size:1rem;color:var(--gc-text-muted);margin-top:18px;max-width:50ch;line-height:1.5}
+
+/* FULL-BLEED image slide */
+.slide.bleed{padding:0}
+.slide.bleed .bg{position:absolute;inset:0}
+.slide.bleed .bg img{width:100%;height:100%;object-fit:cover}
+.slide.bleed .scrimgrad{position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(5,22,42,.82) 0%,rgba(5,22,42,.5) 42%,rgba(5,22,42,.04) 72%)}
+.slide.bleed.btm .scrimgrad{background:linear-gradient(0deg,rgba(5,22,42,.86) 0%,rgba(5,22,42,.35) 45%,transparent 75%)}
+.slide.bleed .overlay{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:center;padding:6vh 7vw;max-width:60ch}
+.slide.bleed.btm .overlay{justify-content:flex-end;padding-bottom:9vh}
+.slide.bleed .eyebrow{color:var(--gc-teal-bright)}
+.slide.bleed h1,.slide.bleed h2{color:#EAF6F8}
+.slide.bleed h1 .accent,.slide.bleed h2 .accent{color:var(--gc-teal-bright)}
+.slide.bleed .lead{color:#Bcd6dd;color:#B9D4DC}
+.slide.bleed .lead strong{color:#fff}
+
+/* flow strip (before/during/after) */
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:6px}
+.phase{background:var(--gc-surface-alt);border:1px solid var(--gc-border);border-radius:16px;padding:24px 22px;position:relative}
+.phase .tag{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gc-teal-deep);margin-bottom:8px}
+.phase .ph-title{font-size:1.35rem;font-weight:800;color:var(--gc-text);margin-bottom:10px;letter-spacing:-.01em;line-height:1.1}
+.phase p{font-size:.95rem;color:var(--gc-text-2);line-height:1.5}
+.phase .arrow{position:absolute;right:-15px;top:50%;transform:translateY(-50%);z-index:2;color:var(--gc-teal);font-size:1.3rem;font-weight:700}
+.phase[data-p="past"]{border-top:3px solid var(--gc-steel)}
+.phase[data-p="present"]{border-top:3px solid var(--gc-teal)}
+.phase[data-p="future"]{border-top:3px solid var(--gc-purple)}
+
+/* card grid (close slide / next steps) */
+.row{display:grid;gap:20px}.row-3{grid-template-columns:repeat(3,1fr)}.row-2{grid-template-columns:1fr 1fr}
+.card{background:var(--gc-surface-alt);border:1px solid var(--gc-border);border-radius:16px;padding:24px 22px}
+.card .num{font-size:.7rem;font-weight:700;letter-spacing:.14em;color:var(--gc-teal);margin-bottom:10px}
+.card h3{color:var(--gc-text);font-size:1.18rem;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+.card p{font-size:.95rem;color:var(--gc-text-2);line-height:1.5}
+.card.accent{background:var(--gc-text);border-color:var(--gc-text)}
+.card.accent .num{color:var(--gc-teal-light)}.card.accent h3{color:#fff}.card.accent p{color:#B8E2EC}
+
+/* chrome */
+.chrome{position:absolute;left:7vw;right:7vw;bottom:3.2vh;display:flex;justify-content:space-between;align-items:center;pointer-events:none;z-index:3}
+.chrome .brand{font-size:.8rem;font-weight:700;color:var(--gc-text-muted)}
+.chrome .brand .c{color:var(--gc-teal)}
+.chrome .pg{font-size:.76rem;color:var(--gc-text-muted);font-variant-numeric:tabular-nums}
+.slide.dark{background:#06090D}
+.slide.dark::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 82% 14%,rgba(46,170,187,0.16) 0%,transparent 55%);pointer-events:none}
+.slide.dark .eyebrow{color:#3EC8DB}
+.slide.dark h1{color:#E8F4F7}.slide.dark h1 .accent{color:#3EC8DB}
+.slide.dark .lead{color:#7AACB8}.slide.dark .lead strong{color:#E8F4F7}
+.slide.dark .big-quote{color:#E8F4F7}
+.slide.dark .chrome .brand,.slide.dark .chrome .pg,.slide.bleed .chrome .brand,.slide.bleed .chrome .pg{color:#7AACB8}
+.slide.bleed .chrome .brand .c{color:var(--gc-teal-bright)}
+
+.arrows{position:fixed;bottom:22px;right:22px;display:flex;gap:8px;z-index:50}
+.arrows button{width:42px;height:42px;border-radius:50%;border:1px solid var(--gc-border);
+  background:var(--gc-surface-alt);color:var(--gc-text);font-size:1.1rem;cursor:pointer;display:grid;place-items:center;transition:all .2s}
+.arrows button:hover{background:var(--gc-teal);color:#fff;border-color:var(--gc-teal)}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--gc-teal);z-index:60;transition:width .4s ease;border-radius:0 3px 3px 0}
+
+@media(max-width:820px){
+  .split,.split.flip{grid-template-columns:1fr;gap:18px}
+  .split .media{order:-1!important;height:38vh}
+  .flow,.row-3{grid-template-columns:1fr}.phase .arrow{display:none}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="deck" id="deck">
+
+  <!-- 1 · COVER -->
+  <section class="slide bleed active" data-img="assets/hero.jpg">
+    <div class="bg"><img src="assets/hero.jpg" alt="MTF Biologics booth — establishing view"></div>
+    <div class="scrimgrad"></div>
+    <div class="overlay">
+      <div class="eyebrow">glassCanopy · Experience design for MTF Biologics</div>
+      <h1>The booth built around <span class="accent">touching real tissue.</span></h1>
+      <p class="lead" style="margin-top:22px">A conversation that starts before the show, peaks at a booth designed to be felt, and resolves in a live reveal after everyone's flown home. Here's the concept, room by room.</p>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">01</div></div>
+  </section>
+
+  <!-- 2 · THE BIG IDEA -->
+  <section class="slide dark center">
+    <div class="fill">
+      <div class="eyebrow">The one-line concept</div>
+      <p class="big-quote">A booth is usually a place you <span style="color:#7AACB8">walk past.</span><br>We're building one you have to <span class="hl" style="color:#3EC8DB">put your hands inside.</span></p>
+      <p class="lead" style="margin-top:26px">MTF's real advantage is tactile — so we make <strong>touching the product</strong> the entire point. Around that centerpiece sits an engagement engine up front, a sensory hangout in the middle, and a set of invite-only subplots branching off the side. One opt-in channel threads it all together.</p>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">02</div></div>
+  </section>
+
+  <!-- 3 · HOW IT FLOWS -->
+  <section class="slide">
+    <div class="fill">
+      <div class="eyebrow">How the whole thing flows</div>
+      <h2 style="margin-bottom:22px">One conversation, in three acts</h2>
+      <div class="flow">
+        <div class="phase" data-p="past"><span class="arrow">&rarr;</span><div class="tag">Before</div><div class="ph-title">Assemble the room</div><p>A pre-show poll/debate. Scan a QR, answer one question, opt in by text. The audience is warm before the doors open.</p></div>
+        <div class="phase" data-p="present"><span class="arrow">&rarr;</span><div class="tag">During</div><div class="ph-title">The "Touch It" booth</div><p>Surgeons handle unlabeled materials and vote. Their reactions hit the big screens live. Food, hammock, darts keep them there.</p></div>
+        <div class="phase" data-p="future"><div class="tag">After</div><div class="ph-title">The reveal</div><p>At a set time: what each material was, what the room chose, a prize for the best response, and a follow-up that opens a meeting.</p></div>
+      </div>
+      <p class="kicker-sm">The spine is a single opt-in channel — <strong>a WhatsApp group</strong> — that people join before, talk in during, and get the payoff in after.</p>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">03</div></div>
+  </section>
+
+  <!-- 4 · HERO WIDE (establishing) -->
+  <section class="slide bleed btm" data-img="assets/hero.jpg">
+    <div class="bg"><img src="assets/hero.jpg" alt="Full booth, three-quarter view"></div>
+    <div class="scrimgrad"></div>
+    <div class="overlay">
+      <div class="eyebrow">The booth at a glance</div>
+      <h2>Warm wood, honeycomb walls, and one clean table on the aisle line.</h2>
+      <p class="lead" style="margin-top:16px">Hexagonal wooden shelving climbs the back and side walls — organic, premium, quietly echoing cellular structure. The touch-test table sits front and center. The big screens glow behind it. A flex-mesh hammock waits to one side. It reads as one designed space, not a trade-show kit.</p>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">04</div></div>
+  </section>
+
+  <!-- 5 · TOUCH TEST (centerpiece) -->
+  <section class="slide">
+    <div class="split flip">
+      <div class="copy">
+        <span class="pill">The centerpiece</span>
+        <h2>The "Touch It" blind test</h2>
+        <p class="lead" style="margin-top:10px">A row of covered stations, each holding an unlabeled material — MTF tissue among decoys. Surgeons reach in, feel the difference with their hands, and vote on which they'd actually want to work with.</p>
+        <ul class="feat-list">
+          <li><strong>The hands decide.</strong> No claims, no brochure — just the tactile difference, discovered firsthand.</li>
+          <li><strong>The vote is the opt-in.</strong> Cast it from the phone they joined the thread with.</li>
+          <li><strong>The "why" becomes content.</strong> Their reasons flow straight to the screens behind them.</li>
+        </ul>
+      </div>
+      <div class="media"><img src="assets/touch.jpg" alt="Surgeon reaching into a covered blind-touch station"><span class="cap">Blind touch test</span></div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">05</div></div>
+  </section>
+
+  <!-- 6 · LIVE SCREENS -->
+  <section class="slide">
+    <div class="split">
+      <div class="copy">
+        <span class="pill">Live response wall</span>
+        <h2>The booth watches itself think</h2>
+        <p class="lead" style="margin-top:10px">Two or three large screens show the group thread updating in real time — who voted for what, and the "why I chose it / what I felt" notes coming in off the floor.</p>
+        <ul class="feat-list">
+          <li><strong>A gravity well.</strong> People stop to watch the room's collective opinion form.</li>
+          <li><strong>Social proof, live.</strong> Every post is a peer endorsement happening in public.</li>
+          <li><strong>Localizable.</strong> Screens stay flexible — nothing baked in, nothing committed before it's verified.</li>
+        </ul>
+      </div>
+      <div class="media"><img src="assets/screens.jpg" alt="Crowd watching big screens with live responses"><span class="cap">The live screens</span></div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">06</div></div>
+  </section>
+
+  <!-- 7 · HANGOUT -->
+  <section class="slide">
+    <div class="split flip">
+      <div class="copy">
+        <span class="pill">Dwell time</span>
+        <h2>A place to actually stay</h2>
+        <p class="lead" style="margin-top:10px">Not a sales perch — a genuine hangout. Good coffee and real bites are the simplest, most reliable way to make a tired attendee stop and linger. The longer they stay, the more the booth works.</p>
+        <ul class="feat-list">
+          <li><strong>Food</strong> — the dwell-time lever that never fails.</li>
+          <li><strong>Syringe darts &amp; a flex-mesh hammock</strong> — surprising, on-brand, photo-worthy.</li>
+          <li><strong>Conversations, not pitches</strong> — the relationship starts while they're relaxed.</li>
+        </ul>
+      </div>
+      <div class="media"><img src="assets/hangout.jpg" alt="Hangout corner with coffee, darts, and hammock"><span class="cap">The hangout corner</span></div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">07</div></div>
+  </section>
+
+  <!-- 8 · HONEYCOMB -->
+  <section class="slide">
+    <div class="split">
+      <div class="copy">
+        <span class="pill">Signature texture</span>
+        <h2>Honeycomb wooden shelving</h2>
+        <p class="lead" style="margin-top:10px">Hexagonal wooden cells across the booth walls — warm, natural, organic. They display samples, totes, and literature, and they're the visual signature that ties every angle of the booth into one space.</p>
+        <ul class="feat-list">
+          <li><strong>Biology, quietly.</strong> The honeycomb echoes cellular and tissue structure without saying a word.</li>
+          <li><strong>Warmth against the white.</strong> Wood softens a clinical category.</li>
+          <li><strong>Modular.</strong> Each cell stages a single object — easy to restyle per show.</li>
+        </ul>
+      </div>
+      <div class="media"><img src="assets/shelves.jpg" alt="Honeycomb hexagonal wooden shelving detail"><span class="cap">Honeycomb shelving</span></div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">08</div></div>
+  </section>
+
+  <!-- 9 · SYRINGE DARTS -->
+  <section class="slide">
+    <div class="split flip">
+      <div class="copy">
+        <span class="pill">A wink at the injection story</span>
+        <h2>Syringe darts</h2>
+        <p class="lead" style="margin-top:10px">A dartboard where the darts are styled as syringes — barrel, plunger, fine needle as the point. Light, competitive, and memorable, with a knowing nod to the Renuva injection workflow.</p>
+        <ul class="feat-list">
+          <li><strong>Play, not pressure.</strong> A game gets people to stay and compete.</li>
+          <li><strong>On-brand by design.</strong> The prop tells the product story sideways.</li>
+          <li><strong>A bracket = a reason to return</strong> to the booth later in the day.</li>
+        </ul>
+      </div>
+      <div class="media"><img src="assets/darts.jpg" alt="Dartboard with syringe-styled darts"><span class="cap">Syringe darts</span></div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">09</div></div>
+  </section>
+
+  <!-- 10 · HAMMOCK -->
+  <section class="slide">
+    <div class="split">
+      <div class="copy">
+        <span class="pill">The photo moment</span>
+        <h2>The flex-mesh hammock</h2>
+        <p class="lead" style="margin-top:10px">A hammock woven to look like surgical flex-mesh, slung in a clean wooden frame. A surprising, genuinely comfortable place to sit — and the booth's most photographed object, echoing the material story every time someone shares it.</p>
+        <ul class="feat-list">
+          <li><strong>Unexpected = memorable.</strong> Nobody forgets the booth with the hammock.</li>
+          <li><strong>Earned reach.</strong> Every photo carries the mesh motif into a feed.</li>
+          <li><strong>Comfort as a message</strong> — the material is something you'd want to rest in.</li>
+        </ul>
+      </div>
+      <div class="media"><img src="assets/hammock.jpg" alt="Flex-mesh hammock object study"><span class="cap">Flex-mesh hammock</span></div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">10</div></div>
+  </section>
+
+  <!-- 11 · MESH TOTE -->
+  <section class="slide">
+    <div class="split flip">
+      <div class="copy">
+        <span class="pill">The takeaway</span>
+        <h2>Mesh tote, not a pen</h2>
+        <p class="lead" style="margin-top:10px">The giveaway is a well-designed mesh tote — useful, on-brand, and a walking billboard through the rest of the hall. It echoes the flex-mesh material story and earns its way home instead of into a bin.</p>
+        <ul class="feat-list">
+          <li><strong>Actually used</strong> — utility beats swag every time.</li>
+          <li><strong>The motif travels</strong> — the mesh weave repeats the story all day.</li>
+          <li><strong>Premium, unbranded-feeling</strong> — restraint reads as quality.</li>
+        </ul>
+      </div>
+      <div class="media"><img src="assets/tote.jpg" alt="Mesh tote bag in a honeycomb shelf cell"><span class="cap">Mesh tote giveaway</span></div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">11</div></div>
+  </section>
+
+  <!-- 12 · OFF-SITE DINNER (subplot) -->
+  <section class="slide bleed btm" data-img="assets/dinner.jpg">
+    <div class="bg"><img src="assets/dinner.jpg" alt="Intimate invite-only steak dinner"></div>
+    <div class="scrimgrad"></div>
+    <div class="overlay">
+      <div class="eyebrow">The subplot · off the show floor</div>
+      <h2>Where the real conversation happens.</h2>
+      <p class="lead" style="margin-top:16px">The booth is a public stage. The relationship deepens in a smaller, quieter room — an invite-only steak dinner for the highest-value targets, plus the off-the-clock hang that isn't about the product at all. We design the main stage and the subplots together.</p>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">12</div></div>
+  </section>
+
+  <!-- 13 · BOOTH PLAN -->
+  <section class="slide">
+    <div class="split">
+      <div class="copy">
+        <span class="pill">The whole system</span>
+        <h2>Every zone, one footprint</h2>
+        <p class="lead" style="margin-top:10px">The QR opt-in greets you at the aisle. The touch station anchors the center. The screen wall runs the back. The hangout fills the corner. Honeycomb shelving wraps the perimeter — and the off-site subplots branch off to the side on a thin connecting line.</p>
+        <p class="kicker-sm" style="margin-top:14px">This same node-and-branch logic drives the interactive planning canvas we build for the event — so every tactic has a clear place and can be moved, added, or edited as the plan evolves.</p>
+      </div>
+      <div class="media"><img src="assets/plan.jpg" alt="Top-down booth plan with subplot nodes"><span class="cap">Top-down booth plan</span></div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">13</div></div>
+  </section>
+
+  <!-- 14 · CLOSE -->
+  <section class="slide dark center">
+    <div class="fill">
+      <div class="eyebrow">The takeaway</div>
+      <p class="big-quote">If a surgeon remembers how it <span class="hl" style="color:#3EC8DB">felt</span>,<br>we've built something a competitor<br>can't copy with a bigger booth.</p>
+      <div class="row row-3" style="margin-top:34px">
+        <div class="card accent"><div class="num">THE HUB</div><h3>Touch, screens, food</h3><p>The gravity well everyone on the floor passes through and remembers.</p></div>
+        <div class="card"><div class="num">THE THREAD</div><h3>One opt-in channel</h3><p>Before, during, and after — a single conversation, not three campaigns.</p></div>
+        <div class="card"><div class="num">THE SUBPLOTS</div><h3>Off-site, invite-only</h3><p>Where the highest-value relationships actually move forward.</p></div>
+      </div>
+    </div>
+    <div class="chrome"><div class="brand"><span class="g">glass</span><span class="c">Canopy</span></div><div class="pg">14</div></div>
+  </section>
+
+</div>
+
+<div class="arrows">
+  <button id="prev" aria-label="Previous">&#8249;</button>
+  <button id="next" aria-label="Next">&#8250;</button>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];let i=0;
+const prog=document.getElementById('progress');
+function show(n){
+  slides[i].classList.remove('active');
+  i=Math.max(0,Math.min(slides.length-1,n));
+  slides[i].classList.add('active');
+  prog.style.width=((i+1)/slides.length*100)+'%';
+}
+show(0);
+document.getElementById('next').onclick=()=>show(i+1);
+document.getElementById('prev').onclick=()=>show(i-1);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();show(i+1)}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  if(e.key==='Home')show(0); if(e.key==='End')show(slides.length-1);
+});
+let sx=null;document.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+document.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)show(dx<0?i+1:i-1);sx=null},{passive:true});
+</script>
+</body>
+</html>
